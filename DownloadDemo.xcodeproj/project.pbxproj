@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F238F6662E863D3100E319A1 /* SwiftExtensions.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F238F6652E863D3100E319A1 /* SwiftExtensions.xcframework */; };
 		F238F6672E863D3100E319A1 /* SwiftExtensions.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F238F6652E863D3100E319A1 /* SwiftExtensions.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F26737242E8689B200EB0ADB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F26737232E8689B200EB0ADB /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,7 @@
 /* Begin PBXFileReference section */
 		F21BB78B2E863AE900997329 /* DownloadDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DownloadDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F238F6652E863D3100E319A1 /* SwiftExtensions.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = SwiftExtensions.xcframework; sourceTree = "<group>"; };
+		F26737232E8689B200EB0ADB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -53,6 +55,7 @@
 		F21BB7822E863AE900997329 = {
 			isa = PBXGroup;
 			children = (
+				F26737232E8689B200EB0ADB /* README.md */,
 				F21BB78D2E863AE900997329 /* DownloadDemo */,
 				F21BB7AF2E863CC500997329 /* Frameworks */,
 				F21BB78C2E863AE900997329 /* Products */,
@@ -140,6 +143,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F26737242E8689B200EB0ADB /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
