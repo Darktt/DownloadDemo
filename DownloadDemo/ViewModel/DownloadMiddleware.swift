@@ -23,7 +23,10 @@ let DownloadMiddleware: Middleware<DownloadState, DownloadAction> = {
                 
                 Task {
                     
-                    await download(with: request, next: next)
+                    let action = DownloadAction.downloadStarted
+                    
+                    next(action)
+                    await download(with: request)
                 }
                 return
             }
@@ -44,7 +47,7 @@ let DownloadMiddleware: Middleware<DownloadState, DownloadAction> = {
 }
 
 private
-func download(with request: any DownloadRequest, next: @escaping (DownloadAction) -> Void) async
+func download(with request: any DownloadRequest) async
 {
     // Implement the logic for the action here
     
@@ -52,24 +55,24 @@ func download(with request: any DownloadRequest, next: @escaping (DownloadAction
         
         for try await event in DownloadHandler.shared.downloadRequestStream(request) {
             
-            let action: DownloadAction
-            
-            switch event {
+            let action: DownloadAction = switch event {
+                    
                 case let .progress(progress):
-                    action = .downloadProgress(progress)
-                    next(action)
+                        .updateProgress(progress)
                     
                 case let .success(fileURL):
-                    action = .downloadComplete(fileURL)
-                    next(action)
+                        .downloadComplete(fileURL)
             }
+            
+            kDownloadStore.dispatch(action)
         }
         
     } catch {
         
         let error = error as NSError
         let downloadError: DownloadError = (error.code, error.localizedDescription)
+        let action = DownloadAction.downloadFailed(downloadError)
         
-        next(.downloadFailed(downloadError))
+        kDownloadStore.dispatch(action)
     }
 }

@@ -30,11 +30,9 @@ struct MainView: View
         self.store.state
     }
     
+    @State
     private
-    var isDownloading: Bool {
-        
-        (self.state.downloadProgress > 0.0) && (self.state.downloadProgress < 1.0)
-    }
+    var isDownloading: Bool = false
     
     @State
     private
@@ -118,6 +116,12 @@ struct MainView: View
         } message: {
             
             Text(self.state.error?.message ?? "Unknown Error")
+        }
+        .onChange(of: self.state.isDownloading) {
+            
+            _, newValue in
+            
+            self.isDownloading = newValue
         }
         .onChange(of: self.state.error != nil) {
             

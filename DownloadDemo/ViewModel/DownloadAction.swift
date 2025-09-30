@@ -14,7 +14,9 @@ enum DownloadAction
     
     case cancelDownload
     
-    case downloadProgress(Double)
+    case downloadStarted
+    
+    case updateProgress(Double)
     
     case downloadComplete(URL)
     

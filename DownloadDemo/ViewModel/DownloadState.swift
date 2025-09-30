@@ -12,6 +12,9 @@ public
 struct DownloadState
 {
     public
+    var isDownloading: Bool = false
+    
+    public
     var downloadProgress: Double = 0.0
     
     public
@@ -25,14 +28,19 @@ struct DownloadState
             return "Pending Download..."
         }
         
-        if self.downloadedFileURL != nil, self.downloadProgress >= 1.0 {
+        if self.isDownloading, self.downloadProgress == 0.0, self.downloadedFileURL == nil {
             
-            return "Download Complete"
+            return "Downloading..."
         }
         
         if self.downloadProgress > 0.0, self.downloadProgress < 1.0 {
             
             return (self.downloadProgress * 100.0).format("Downloading... %.2f%%")
+        }
+        
+        if self.downloadedFileURL != nil, self.downloadProgress >= 1.0 {
+            
+            return "Download Complete"
         }
         
         return "Download Failed"

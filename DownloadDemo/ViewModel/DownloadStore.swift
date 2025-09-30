@@ -13,7 +13,12 @@ func kReducer(state: DownloadState, action: DownloadAction) -> DownloadState {
     var newState = state
     newState.error = nil
     
-    if case let .downloadProgress(progress) = action {
+    if case .downloadStarted = action {
+        
+        newState.isDownloading = true
+    }
+    
+    if case let .updateProgress(progress) = action {
         
         newState.downloadProgress = progress
         newState.downloadedFileURL = nil
@@ -21,16 +26,19 @@ func kReducer(state: DownloadState, action: DownloadAction) -> DownloadState {
     
     if case let .downloadComplete(url) = action {
         
+        newState.isDownloading = false
         newState.downloadedFileURL = url
     }
     
     if case let .downloadFailed(error) = action {
         
+        newState.isDownloading = false
         newState.error = error
     }
     
     if case .downloadCanceled = action {
         
+        newState.isDownloading = false
         newState.downloadProgress = 0.0
         newState.downloadedFileURL = nil
     }
