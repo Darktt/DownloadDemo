@@ -23,27 +23,23 @@ struct DownloadState
     public
     var downloadStatus: String {
         
-        if self.downloadProgress == 0.0, self.downloadedFileURL == nil {
+        switch (self.isDownloading, self.downloadProgress, self.downloadedFileURL) {
             
-            return "Pending Download..."
+            case (false, 0.0, nil):
+                return "Pending Download..."
+                
+            case (true, 0.0, nil):
+                return "Downloading..."
+                
+            case (true, let progress, nil) where progress > 0.0 && progress < 1.0:
+                return (progress * 100.0).format("Downloading... %.2f%%")
+                
+            case (false, let progress, let url) where progress >= 1.0 && url != nil:
+                return "Download Complete"
+                
+            default:
+                return "Download Failed"
         }
-        
-        if self.isDownloading, self.downloadProgress == 0.0, self.downloadedFileURL == nil {
-            
-            return "Downloading..."
-        }
-        
-        if self.downloadProgress > 0.0, self.downloadProgress < 1.0 {
-            
-            return (self.downloadProgress * 100.0).format("Downloading... %.2f%%")
-        }
-        
-        if self.downloadedFileURL != nil, self.downloadProgress >= 1.0 {
-            
-            return "Download Complete"
-        }
-        
-        return "Download Failed"
     }
     
     public

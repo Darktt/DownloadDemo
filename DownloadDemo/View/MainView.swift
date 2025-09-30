@@ -30,9 +30,11 @@ struct MainView: View
         self.store.state
     }
     
-    @State
     private
-    var isDownloading: Bool = false
+    var isDownloading: Bool {
+        
+        self.state.isDownloading
+    }
     
     @State
     private
@@ -116,12 +118,6 @@ struct MainView: View
         } message: {
             
             Text(self.state.error?.message ?? "Unknown Error")
-        }
-        .onChange(of: self.state.isDownloading) {
-            
-            _, newValue in
-            
-            self.isDownloading = newValue
         }
         .onChange(of: self.state.error != nil) {
             
