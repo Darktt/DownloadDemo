@@ -2,7 +2,7 @@
 //  DownloadStore.swift
 //
 //  Created by Eden on 2025/9/26.
-//  
+//
 //
 
 import UIKit
@@ -11,38 +11,30 @@ private
 func kReducer(state: DownloadState, action: DownloadAction) -> DownloadState {
     
     var newState = state
-    newState.error = nil
     
     if case .downloadStarted = action {
         
-        newState.isDownloading = true
-        newState.downloadProgress = 0.0
-        newState.downloadedFileURL = nil
+        newState.status = .starting
     }
     
     if case let .updateProgress(progress) = action {
         
-        newState.downloadProgress = progress
-        newState.downloadedFileURL = nil
+        newState.status = .downloading(progress: progress)
     }
     
     if case let .downloadComplete(url) = action {
         
-        newState.isDownloading = false
-        newState.downloadedFileURL = url
+        newState.status = .complete(path: url)
     }
     
     if case let .downloadFailed(error) = action {
         
-        newState.isDownloading = false
-        newState.error = error
+        newState.status = .failed(error: error)
     }
     
     if case .downloadCanceled = action {
         
-        newState.isDownloading = false
-        newState.downloadProgress = 0.0
-        newState.downloadedFileURL = nil
+        newState.status = .canceled
     }
     
     return newState

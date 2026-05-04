@@ -36,6 +36,17 @@ struct MainView: View
         self.state.isDownloading
     }
     
+    private
+    var error: DownloadError? {
+        
+        guard case let .failed(error: error) = self.state.status else {
+            
+            return nil
+        }
+        
+        return error
+    }
+    
     @State
     private
     var selectedSize: DownloadSize = .size100MB
@@ -63,17 +74,17 @@ struct MainView: View
                 
                 HStack(spacing: 10.0) {
                     
-                    Image(systemName: "arrow.down.circle")
+                    self.statusIndicator()
                     
-                    Text(self.state.downloadStatus)
+                    Text(self.state.status.description)
                         .font(.subheadline)
                 }
                 .frame(minWidth: 200.0, minHeight: 40.0)
                 .glassEffect()
                 
-                if self.isDownloading {
+                if case let .downloading(progress: progress) = self.state.status {
                     
-                    ProgressView(value: self.state.downloadProgress)
+                    ProgressView(value: progress)
                         .tint(Color.orange)
                         .glassEffect()
                 }
@@ -88,7 +99,7 @@ struct MainView: View
                 .pickerStyle(.segmented)
                 .glassEffect(.clear)
                 
-                if self.isDownloading {
+                if case .downloading(_) = self.state.status {
                     
                     Button("Cancel") {
                         
@@ -117,9 +128,9 @@ struct MainView: View
             }
         } message: {
             
-            Text(self.state.error?.message ?? "Unknown Error")
+            Text(self.error?.message ?? "Unknown Error")
         }
-        .onChange(of: self.state.error != nil) {
+        .onChange(of: self.error != nil) {
             
             _, newValue in
             
@@ -131,8 +142,20 @@ struct MainView: View
 private
 extension MainView
 {
-    func startDownload() {
-        
+    @ViewBuilder
+    func statusIndicator() -> some View
+    {
+        if case .starting = self.state.status {
+            
+            ProgressView()
+        } else {
+            
+            Image(systemName: "arrow.down.circle")
+        }
+    }
+    
+    func startDownload()
+    {
         let action: DownloadAction = switch self.selectedSize {
                 
             case .size100MB:
@@ -148,8 +171,8 @@ extension MainView
         self.store.dispatch(action)
     }
     
-    func cancelDownload() {
-        
+    func cancelDownload()
+    {
         let action = DownloadAction.cancelDownload
         
         self.store.dispatch(action)

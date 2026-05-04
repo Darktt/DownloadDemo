@@ -2,7 +2,7 @@
 //  DownloadState.swift
 //
 //  Created by Eden on 2025/9/26.
-//  
+//
 //
 
 import Foundation
@@ -12,36 +12,63 @@ public
 struct DownloadState
 {
     public
-    var isDownloading: Bool = false
+    var status: Status = .pending
     
     public
-    var downloadProgress: Double = 0.0
-    
-    public
-    var downloadedFileURL: URL?
-    
-    public
-    var downloadStatus: String {
+    var isDownloading: Bool {
         
-        switch (self.isDownloading, self.downloadProgress, self.downloadedFileURL) {
+        guard case .downloading(_) = self.status else {
             
-            case (false, 0.0, nil):
-                return "Pending Download..."
-                
-            case (true, 0.0, nil):
-                return "Downloading..."
-                
-            case (true, let progress, nil) where progress > 0.0 && progress < 1.0:
-                return (progress * 100.0).format("Downloading... %.2f%%")
-                
-            case (false, let progress, let url) where progress >= 1.0 && url != nil:
-                return "Download Complete"
-                
-            default:
-                return "Download Failed"
+            return false
+        }
+        
+        return true
+    }
+}
+
+extension DownloadState
+{
+    public
+    enum Status
+    {
+        case pending
+        
+        case starting
+        
+        case downloading(progress: Double)
+        
+        case complete(path: URL)
+        
+        case failed(error: DownloadError)
+        
+        case canceled
+    }
+}
+
+extension DownloadState.Status: CustomStringConvertible
+{
+    public
+    var description: String {
+        
+        switch self {
+            
+            case .pending:
+                "Pending Download..."
+            
+            case .starting:
+                "Download Staring..."
+            
+            case .downloading(progress: let progress):
+                (progress * 100.0).format("Downloading... %.2f%%")
+            
+            case .complete(path: _):
+                "Download Complete"
+            
+            case .failed(error: let error):
+                "Download Failed, error: \(error.message)"
+            
+            case .canceled:
+                "Download Canceled"
         }
     }
-    
-    public
-    var error: DownloadError?
 }
